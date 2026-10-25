@@ -389,7 +389,8 @@ pub fn temp_name(file: &str) -> String {
     static COUNTER: AtomicU64 = AtomicU64::new(0);
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
     // Bound UTF-8 bytes, not characters, so the name plus the suffix stays under NAME_MAX.
-    let stem = file.get(..file.floor_char_boundary(64)).unwrap_or_default();
+    let stem_end = file.floor_char_boundary(64);
+    let stem = file.get(..stem_end).unwrap_or("");
     format!(".{stem}.{}-{n}.pcsave.tmp", std::process::id())
 }
 
